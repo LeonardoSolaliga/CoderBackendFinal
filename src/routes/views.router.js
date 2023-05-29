@@ -15,5 +15,6 @@ router.get('/logout',viewController.logout)
 router.get('/profile',viewController.profile)
 router.get('/crearProduct',viewController.crearProducto)
 router.get('/carts',viewController.cart)
+router.get('/completedPurchase',viewController.completedpurchase)
 
 export default router;

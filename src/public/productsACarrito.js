@@ -97,12 +97,14 @@ Finalizar();
 
 async function obtenerCantidad() {
     const paginacion=Number(document.getElementById("page").innerText);
+
     const response = await fetch(`/api/products/?page=${paginacion}`, {
         method: 'GET'
     })
     const productos = await response.json();
-    const products=await productos.payload.docs
-    products.forEach((product, indice) => {
+    console.log(paginacion);
+    console.log(productos);
+    productos.forEach((product, indice) => {
         let contador=1;
         let botonSuma = document.getElementById(`botonAdd${indice}`)
         botonSuma.addEventListener("click", (e) => {
@@ -132,6 +134,7 @@ async function obtenerCantidad() {
         botonAgregar.addEventListener("click",async(e)=>{
             e.preventDefault()
             const productonuevo={_id:product._id,quantity:contador}
+            console.log(productonuevo);
             await fetch(`/api/carrito/${product.code}/productos`,{
                 method:'POST',
                 body:JSON.stringify(productonuevo),
@@ -142,12 +145,6 @@ async function obtenerCantidad() {
             window.location.replace('/carts')
         })
     })
-    let botonFinalizar = document.getElementById(`Finalizar`)
-    botonFinalizar.addEventListener("click",()=>{
-        window.location.replace('/carts')
-    })
-
-
 }
 
 

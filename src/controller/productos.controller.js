@@ -1,15 +1,11 @@
 import {productsService} from '../DAOs/index.js'
 
 const allProducts= async (req, res, next) => {
-    const products = await productsService.getProducts();
-    res.send({status:"success",payload:products})
-}
-
-const idProducts= async (req, res, next) => {
-    const page=req.query.page;
+    const page=req.query.page|| 1;
     const ProductosPagination=await productsService.getProducts({},page);
-    const Productos=await ProductosPagination.docs;
-    res.send(Productos);
+    const Productos=ProductosPagination.docs;
+    console.log(Productos)
+    res.send({status:"success",payload:Productos});
 }
 
 const postProducts=async (req, res, next) => {
@@ -52,7 +48,6 @@ const deleteProduct=async (req, res, next) => {
 
 export default{
     allProducts,
-    idProducts,
     postProducts,
     editProduct,
     deleteProduct

@@ -1,6 +1,7 @@
-import {cartsService, historiesService, usersService} from '../DAOs/index.js'
+import {cartsService, historiesService, usersService,ticketService} from '../DAOs/index.js'
 import { makeid } from '../utils.js';
 import { DateTime } from "luxon";
+import Mailer from "../services/nodemailer.js"
 
 
 const agregarAlCarrito=async(req,res)=>{
@@ -25,23 +26,17 @@ const agregarAlCarrito=async(req,res)=>{
 const finalizarCompra=async(req,res)=>{
     const user=await usersService.getUserBy({_id:req.user.id})
     const cart=await cartsService.getCartById(user.cart);
-    console.log(user);
-    console.log(cart);
     const populateCart=await cartsService.getCartById(user.cart,{populate:true})
-    console.log("--------------------------")
-    console.log(populateCart.products)
+    const precioTotal=populateCart.products.reduce((previous,current)=>previous+(current._id.price)*current.quantity,0)
     const ticket={
         user:user._id,
         products:cart.products,
-        total:populateCart.products.reduce((previous,current)=>previous+(current._id.price)*current.quantity,0),
+        total:precioTotal,
         code:makeid(20)
     }
-    await cartsService.updateCart(cart._id,{games:[]});
-    await ticketsService.createTicket(ticket);
-    console.log(populateCart.products.reduce((previous,current)=>previous+(current._id.price)*current.quantity,0))
-    console.log("----------------------------------");
+    await cartsService.updateCart(cart._id,{products:[]});
+    await ticketService.createTicket(ticket);
     const history = await historiesService.getHistoryBy({user:user._id});
-    console.log(history);
     const event = {
         event:'Purchase',
         date: DateTime.now().toISO(),
@@ -52,23 +47,48 @@ const finalizarCompra=async(req,res)=>{
     }else{
         history.events.push(event);
         await historiesService.updateHistory(history._id,{events:history.events})
+    } 
+    await cartsService.updateCart(cart._id,{products:[]});  
+    let contenedor = ``;
+    
+    for(const producto of (populateCart.products)){
+
+        if (producto._id) {
+            contenedor += `<span>Titulo:${producto._id.title}</span> <span>Price: $${producto._id.price}</span><span>Cantidad:${producto._id.description}</span> <span>Cantidad:${producto.quantity}</span></p>`
+        }
     }
+    contenedor+=`<span>PRECIO TOTAL:$${precioTotal}</span>`
+    contenedor+=`<p><span>Ticket de compra:${ticket.code}</span><p>` 
+    contenedor+=`<span>Gracias por su compra :)</span>` 
+    await Mailer.sendMail({
+        from:'Compra completada <coderEcommerce@gmail.com>',
+        to:req.session.user.email,
+        subject:'Gracias por su compra :)',
+        html:`${contenedor}`,
+    })
     res.send({status: "success", message: "Compra finalizada"})
-
-
 }
 
 const deleteProduct=async(req,res)=>{
     const user=req.session.user;
     const prdct=req.body;
     const cart=await cartsService.getCartById(user.cart)
+    const prodDelete=cart.products.filter(prod=>prod._id!=prdct._id)
+    cart.products=prodDelete;
+    await cartsService.updateCart(user.cart,cart)
+    res.send({status:"success", message:"se elimino el producto del carrito"})
+}
 
-
+const ProductCart=async(req,res)=>{
+    const user=req.session.user;
+    const cart=await cartsService.getCartById(user.cart)
+    res.send({status:"sucess",payload:cart})
 }
 
 
 export default {
     agregarAlCarrito,
     finalizarCompra,
-    deleteProduct
+    deleteProduct,
+    ProductCart
 }

@@ -1,4 +1,12 @@
 <div>
+    <h1>Bienvenido {{user.nombre}} </h1>
+    <div>
+        {{#if user.nombre}}
+            <button><a href="/profile">Perfil</a></button>
+            <button><a href="/carts">Tu carrito</a></button>
+            <button><a href="/logout">logout</a></button>
+        {{/if}}
+    </div>
     {{#if Productos.length}}
         <table>
             <tr style="border: 1px solid black">
@@ -21,14 +29,13 @@
         </table>
         <div>
             {{#if paginationData.hasPrevPage}}
-            <a href="http://localhost:8080?page={{paginationData.prevPage}}"><button>Anterior</button></a>
+            <a href="http://localhost:8080/?page={{paginationData.prevPage}}"><button>Anterior</button></a>
             {{/if}}
             <div id="page">{{paginationData.page}}</div>
             {{#if paginationData.hasNextPage}}
-            <a href="http://localhost:8080?page={{paginationData.nextPage}}"><button>Siguiente</button></a>
+            <a href="http://localhost:8080/?page={{paginationData.nextPage}}"><button>Siguiente</button></a>
             {{/if}}
         </div>
-        <button id="Finalizar">FINALIZAR COMPRA</button>
 
     {{else}}
         <h3>No hay productos</h3>

@@ -7,7 +7,7 @@ const schema=new mongoose.Schema({
         type:mongoose.SchemaTypes.ObjectId,
         ref:"Users"
     },
-    productos:[
+    products:[
         {
             _id: {
                 type: mongoose.SchemaTypes.ObjectId,
@@ -16,7 +16,7 @@ const schema=new mongoose.Schema({
             quantity: {
                 type: Number
             }
-        }
+        },
     ],
     total:{
         type:Number,

@@ -1,12 +1,11 @@
-import {cartsService, productsService} from '../DAOs/index.js'
+import {cartsService, productsService, historiesService} from '../DAOs/index.js'
 
 const register=(req,res)=>{
     res.render('register',{});
 }
 
 const login=(req,res)=>{
-    req.logger.warning('warning')
-    res.render('login',{});
+    res.render('login',{user:req.session.user});
 }
 
 const logout=(req,res)=>{
@@ -18,15 +17,15 @@ const logout=(req,res)=>{
     }
 }
 
-const profile=(req,res)=>{
-    res.render('profile',{user:req.session.user})
+const profile=async(req,res)=>{
+    const history = await historiesService.getHistoryBy({user:req.user.id})
+    res.render('profile',{user:req.session.user,events:history?history.events:[]})
 }
 
 const inicio=async(req, res)=>{
     const page=req.query.page|| 1;
     const ProductosPagination=await productsService.getProducts({},page);
     const Productos=ProductosPagination.docs;
-    //console.log(Productos)
     const paginationData={
         hasPrevPage:ProductosPagination.hasPrevPage,
         hasNextPage:ProductosPagination.hasNextPage,
@@ -44,10 +43,13 @@ const cart=async(req,res)=>{
     const cartid=req.session.user.cart
     const cart=await cartsService.getCartById(cartid,{populate:true})
     const name=req.session.user.nombre
-    //const Productos  = cart.products.map(prod=>prod._id);
-    //console.log(Productos)
     res.render('carts',{Productos:cart.products,name})
 }
+
+const completedpurchase=(req,res)=>{
+    res.render('completePurchase');
+}
+
 
 export default{
     register,
@@ -56,6 +58,7 @@ export default{
     profile,
     inicio,
     crearProducto,
-    cart
+    cart,
+    completedpurchase
 
 }

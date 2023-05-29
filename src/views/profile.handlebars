@@ -1,5 +1,18 @@
 <div>
     <h1>Bienvenid@, {{user.nombre}}</h1>
+    <button><a href="/">Inicio</a></button>
     <p>rol: {{user.role}}</p>
     <img src={{user.avatar}} >
+    <br/>
+    <h3>Historial de actividades</h3>
+    <ul>
+        {{#each events}}
+        <li>
+            <div>
+                <p>{{this.event}}</p>
+                <p>{{this.description}}</p>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
 </div>

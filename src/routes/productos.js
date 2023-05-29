@@ -22,8 +22,6 @@ function crearErrorNoEsAdmin() {
 }
 
 router.get("/",productsController.allProducts)
-router.get("/:id",productsController.idProducts)
-
 router.post("/", uploader.single('image'), productsController.postProducts)
 router.put("/:id", soloAdmins, productsController.editProduct)
 router.delete("/:id", soloAdmins, productsController.deleteProduct)
