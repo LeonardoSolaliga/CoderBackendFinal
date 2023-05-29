@@ -54,7 +54,7 @@ const finalizarCompra=async(req,res)=>{
     for(const producto of (populateCart.products)){
 
         if (producto._id) {
-            contenedor += `<span>Titulo:${producto._id.title}</span> <span>Price: $${producto._id.price}</span><span>Cantidad:${producto._id.description}</span> <span>Cantidad:${producto.quantity}</span></p>`
+            contenedor += `<span>Titulo: ${producto._id.title}</span> <span>Price: $${producto._id.price}</span><span>Description: ${producto._id.description}</span> <span>Cantidad: ${producto.quantity}</span></p>`
         }
     }
     contenedor+=`<span>PRECIO TOTAL:$${precioTotal}</span>`
