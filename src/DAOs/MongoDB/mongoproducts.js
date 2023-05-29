@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-//import ContainerMongo from "./Mongodb.js"
 import mongoosePagination from "mongoose-paginate-v2"
 
 const productsSchema = new mongoose.Schema({

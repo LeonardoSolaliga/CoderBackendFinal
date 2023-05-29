@@ -1,5 +1,4 @@
-//import {getUserBy,createUser} from '../DAOs/UserDAO.js'
-//import userModel from "../Model/user.js"
+
 import {cartsService, usersService} from '../DAOs/index.js'
 import { createHash } from "../utils.js";
 import Mailer from "../services/nodemailer.js"

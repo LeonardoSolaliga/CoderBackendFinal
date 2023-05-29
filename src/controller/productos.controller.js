@@ -4,7 +4,6 @@ const allProducts= async (req, res, next) => {
     const page=req.query.page|| 1;
     const ProductosPagination=await productsService.getProducts({},page);
     const Productos=ProductosPagination.docs;
-    console.log(Productos)
     res.send({status:"success",payload:Productos});
 }
 
