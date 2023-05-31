@@ -16,17 +16,10 @@ const register = async (req, res) => {
     const hashedPassword = await createHash(password);
     let cart = await cartsService.createCart();
     const result = await usersService.createUser({ first_name, last_name, email, password: hashedPassword, cart: cart._id, avatar: `${req.protocol}://${req.hostname}:8080/img/${file.filename}` })
-    /*const result = await userModel.create({
-        first_name,
-        last_name,
-        email,
-        password:hashedPassword,
-        avatar:`${req.protocol}://${req.hostname}:8080/img/${file.filename}`
-    })*/
     await Mailer.sendMail({
-        from: 'Leo <leo.nosecuanto@gmail.com>',
+        from: 'Creacion de cuenta <noreplyCoderfinal@gmail.com>',
         to: email,
-        subject: 'Correo de prueba :)',
+        subject: 'Creacion de cuenta',
         html: `<div><h1 style="color:red;">se creo una cuenta :)</h1></div>`,
     })
 
